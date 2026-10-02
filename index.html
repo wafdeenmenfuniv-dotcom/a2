@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اختبار تفاعلي — القصة الموجهة للأطفال ذوي الإعاقة العقلية</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#657087;--accent:#2457d6;--accent2:#163b99;--good:#14804a;--goodbg:#eaf8f0;--bad:#c73b3b;--badbg:#fff0f0;--border:#dfe5ef}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#eef3ff,#f8fafc);font-family:Tahoma,"Segoe UI",Arial,sans-serif;color:var(--ink);line-height:1.7}
+.container{max-width:900px;margin:0 auto;padding:28px 16px 48px}
+.hero{background:linear-gradient(135deg,#173a8f,#2e68df);color:white;border-radius:24px;padding:30px 28px;margin-bottom:18px;box-shadow:0 14px 35px rgba(27,57,125,.18)}
+.hero h1{margin:0 0 8px;font-size:clamp(24px,4vw,38px)} .hero p{margin:0;opacity:.92}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+.stat{background:rgba(255,255,255,.12);padding:12px;border-radius:14px;text-align:center} .stat b{display:block;font-size:20px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:0 8px 22px rgba(30,45,75,.06)}
+.topbar{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.progress{height:10px;background:#e8edf5;border-radius:99px;overflow:hidden;margin:10px 0 22px} .progress>div{height:100%;background:var(--accent);width:0;transition:width .25s}
+.qnum{color:var(--accent);font-weight:800} .question{font-size:21px;font-weight:800;margin:10px 0 20px}
+.options{display:grid;gap:11px} .option{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:right;background:#fbfcfe;border:2px solid var(--border);border-radius:15px;padding:14px 15px;cursor:pointer;font-size:16px;transition:.15s}
+.option:hover{border-color:#a9b9dc;background:#f7f9ff} .option input{margin-top:6px;accent-color:var(--accent);transform:scale(1.15)}
+.option.correct{border-color:var(--good);background:var(--goodbg)} .option.wrong{border-color:var(--bad);background:var(--badbg)}
+.feedback{display:none;margin-top:18px;padding:15px;border-radius:14px;border-right:5px solid var(--accent);background:#f1f5ff}
+.feedback.show{display:block} .feedback strong{display:block;margin-bottom:4px}
+.actions{display:flex;gap:10px;justify-content:space-between;margin-top:20px;flex-wrap:wrap}
+button{border:0;border-radius:13px;padding:12px 18px;font-weight:800;cursor:pointer;font-size:15px;min-height:44px}
+.primary{background:var(--accent);color:white} .primary:hover{background:var(--accent2)} .secondary{background:#edf1f7;color:#26334d}
+button:disabled{opacity:.45;cursor:not-allowed}
+.result{display:none;text-align:center} .result.show{display:block}
+.score{font-size:58px;font-weight:900;color:var(--accent);line-height:1.1;margin:8px 0}
+.badge{display:inline-block;padding:7px 13px;border-radius:999px;background:#edf2ff;color:var(--accent);font-weight:800}
+.review{margin-top:18px;text-align:right} .review-item{border:1px solid var(--border);border-radius:14px;padding:13px;margin:10px 0}
+.review-item.ok{border-right:5px solid var(--good)} .review-item.no{border-right:5px solid var(--bad)}
+.small{font-size:13px;color:var(--muted)} .hidden{display:none}
+
+#studentName:focus,#academicId:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(36,87,214,.10)}
+@media(max-width:620px){.stats{grid-template-columns:1fr}.hero{padding:23px 18px}.panel{padding:17px}.question{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="container" id="app">
+<section class="hero">
+<h1>اختبار تفاعلي: القصة الموجهة للأطفال ذوي الإعاقة العقلية</h1>
+<p>اختبار قائم على محتوى الفصل الأول: المفهوم، الخصائص، الأهمية، والأنواع القصصية وتطبيقاتها التربوية.</p>
+<div class="stats"><div class="stat"><b id="count">0</b> سؤال</div><div class="stat"><b>اختيار من متعدد</b> نمط الأسئلة</div><div class="stat"><b>فوري</b> التصحيح والتغذية الراجعة</div></div>
+</section>
+
+
+<section class="panel" id="startPanel">
+  <div style="text-align:center;margin-bottom:18px">
+    <span class="badge">بيانات الطالبة</span>
+    <h2 style="margin:10px 0 6px">ابدئي الاختبار</h2>
+    <p class="small">يرجى كتابة البيانات التالية قبل الانتقال إلى الأسئلة.</p>
+  </div>
+
+  <form id="studentForm">
+    <div style="display:grid;gap:16px;max-width:620px;margin:auto">
+      <label style="font-weight:800">
+        اسم الطالبة
+        <input id="studentName" type="text" required autocomplete="name"
+          placeholder="اكتبي اسم الطالبة بالكامل"
+          style="display:block;width:100%;margin-top:7px;padding:13px 14px;border:2px solid var(--border);border-radius:13px;font:inherit;outline:none">
+      </label>
+
+      <label style="font-weight:800">
+        الرقم الأكاديمي
+        <input id="academicId" type="text" required autocomplete="off"
+          placeholder="اكتبي الرقم الأكاديمي"
+          style="display:block;width:100%;margin-top:7px;padding:13px 14px;border:2px solid var(--border);border-radius:13px;font:inherit;outline:none">
+      </label>
+
+      <button class="primary" type="submit" style="width:100%;margin-top:4px">
+        بدء الاختبار
+      </button>
+    </div>
+  </form>
+</section>
+
+<section class="panel" id="quizPanel" style="display:none">
+<div class="topbar"><div><span class="qnum" id="qnum"></span></div><div class="small" id="answered">تمت الإجابة: 0</div></div>
+<div class="progress"><div id="bar"></div></div>
+<div class="question" id="question"></div>
+<form id="form"><div class="options" id="options"></div></form>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="actions">
+<button class="secondary" id="prev" type="button">السابق</button>
+<div style="display:flex;gap:10px"><button class="secondary" id="restart" type="button">إعادة الاختبار</button><button class="primary" id="next" type="button">التالي</button></div>
+</div>
+</section>
+
+<section class="panel result" id="result">
+<span class="badge">انتهى الاختبار</span>
+<div id="studentResult" style="margin-top:14px;font-weight:800"></div>
+<div class="score" id="score"></div>
+<h2 id="resultTitle"></h2>
+<p id="resultText"></p>
+<button class="primary" id="again" type="button">إعادة الاختبار</button>
+<div class="review" id="review"></div>
+</section>
+</div>
+<script>
+const questions = [{"q": "ما الوظيفة الأساسية للقصة الموجهة للأطفال ذوي الإعاقة العقلية وفق المنظور التربوي؟", "opts": ["الترفيه والتسلية فقط", "وسيط تعليمي وتأهيلي ونمائي متعدد الأبعاد", "تنمية الخيال دون أهداف تعليمية", "تعليم القراءة والكتابة فقط"], "ans": 1, "fb": "القصة لا تقتصر على الترفيه؛ بل تُستخدم كوسيط تعليمي وتأهيلي ونمائي يسهم في تطوير القدرات التكيفية والشخصية."}, {"q": "من أي جذر لغوي اشتقت كلمة «قصة» في اللغة العربية؟", "opts": ["ك-ت-ب", "ق-ص-ص", "ر-و-ى", "ح-ك-ى"], "ans": 1, "fb": "يرد في المادة أن كلمة «قصة» مشتقة من الجذر اللغوي (ق-ص-ص)، وترتبط بمعاني المتابعة والتتبع ونقل الخبر شيئاً فشيئاً."}, {"q": "أي عنصر من العناصر التالية يمثل «المحرك الأساسي للأحداث» في النص القصصي؟", "opts": ["المكان", "الحل", "الشخصيات", "الزمن"], "ans": 2, "fb": "الشخصيات هي المحرك الأساسي للأحداث، بينما البناء الزمني والمكاني يحدد البيئة، والحبكة تمثل الصراع أو التحدي، والحل يمثل النهاية."}, {"q": "ما المقصود بالتعريف الإجرائي للقصة للطفل ذي الإعاقة العقلية؟", "opts": ["قصة أدبية طويلة تعتمد على الرموز المجردة", "وسيط تربوي وتأهيلي مصمم وفق العمر العقلي والخصائص الإدراكية للطفل", "قصة موجهة لجميع الأطفال بالطريقة نفسها", "نص قصصي يعتمد على الحوار المعقد"], "ans": 1, "fb": "التعريف الإجرائي يركز على كون القصة وسيطاً تربوياً وتأهيلياً، مع التبسيط الشديد والتكرار الموجه والوسائط المتعددة وأحداث قصيرة مباشرة."}, {"q": "بسبب بطء معدل الإدراك والمعالجة، كيف ينبغي أن يكون إيقاع سرد القصة؟", "opts": ["سريعاً جداً", "متغيراً وعشوائياً", "بطيئاً ومنظماً", "من دون توقف بين المشاهد"], "ans": 2, "fb": "المادة توصي بالإيقاع البطيء والمنظم، والتأني عند الانتقال بين الصفحات، وتجنب تزاحم المثيرات."}, {"q": "ما الأسلوب الأنسب للتعامل مع صعوبة التفكير المجرد لدى الطفل؟", "opts": ["الإكثار من الرموز والمفاهيم المعنوية", "تقديم المفاهيم في صورة أفعال وسلوكيات ملموسة ومشاهدة", "استخدام المجازات البلاغية", "زيادة تعقيد الحبكة"], "ans": 1, "fb": "التفكير الملموس يجعل التجسيد المباشر أفضل؛ فمثلاً يمكن عرض الأمانة من خلال إعادة البطل للعبة إلى صاحبها."}, {"q": "ما الاستراتيجية القصصية المرتبطة بضعف الذاكرة العاملة وقصور التذكر؟", "opts": ["تقليل التكرار قدر الإمكان", "النمط التكراري البنائي", "زيادة عدد الشخصيات", "استخدام جمل طويلة"], "ans": 1, "fb": "تكرار المواقف والسلوكيات المركزية والعبارات الشارحة يساعد على تثبيت المعنى وتسهيل استدعائه."}, {"q": "ما المدة المذكورة عادة للعرض القصصي في ضوء قصر مدة الانتباه؟", "opts": ["1–2 دقيقة دائماً", "5–10 دقائق بحسب المستوى الإدراكي والعمر العقلي", "20–30 دقيقة", "45 دقيقة"], "ans": 1, "fb": "المادة تحدد عادة مدة تتراوح بين 5 و10 دقائق، بحسب المستوى الإدراكي والعمر العقلي للطفل."}, {"q": "لماذا يُفضّل أن تدور القصة حول فكرة واحدة وبسيطة؟", "opts": ["لزيادة التعقيد الدرامي", "لتجنب التشعيب والحبكات الثانوية التي تشتت الانتباه", "لإلغاء الجانب التربوي", "لزيادة عدد الشخصيات"], "ans": 1, "fb": "ضيق سعة الانتباه يجعل التركيز على فكرة واحدة بسيطة أكثر ملاءمة، مع تجنب التشعيب والحبكات الثانوية."}, {"q": "ما أفضل معالجة لصعوبة تعميم أثر التعلم؟", "opts": ["عرض مواقف بعيدة عن حياة الطفل", "تقديم مواقف مشابهة للحياة اليومية وربط السلوك بالتطبيق الواقعي", "إلغاء المواقف التطبيقية", "الاعتماد على الشرح النظري فقط"], "ans": 1, "fb": "القصة يمكن أن تحاكي مواقف واقعية مشابهة لما يمر به الطفل، مما يسهل نقل السلوك إلى المنزل أو المدرسة."}, {"q": "أي نوع من اللغة يناسب محدودية الحصيلة اللغوية؟", "opts": ["كلمات بسيطة قصيرة ومألوفة", "مصطلحات غريبة ومجازات معقدة", "جمل أدبية طويلة", "ألفاظ تخصصية كثيرة"], "ans": 0, "fb": "المادة توصي باستخدام كلمات بسيطة وقصيرة ومألوفة من البيئة المباشرة للطفل، والابتعاد عن الألفاظ الغريبة والمجازات المعقدة."}, {"q": "ما الطول المقترح للجملة الواحدة في البناء اللغوي للقصة؟", "opts": ["1–2 كلمة فقط دائماً", "3–5 كلمات", "10–15 كلمة", "أكثر من 20 كلمة"], "ans": 1, "fb": "ورد أن الجملة الواحدة يفضل ألا تتجاوز 3 إلى 5 كلمات وأن تكون واضحة ومباشرة."}, {"q": "ما فائدة النمط اللفظي التكراري في القصة؟", "opts": ["منع الطفل من المشاركة", "مساعدة الطفل على التنبؤ بالحدث التالي وتشجيعه على الترديد", "زيادة الغموض", "إطالة القصة"], "ans": 1, "fb": "العبارات المتكررة تساعد الطفل على التنبؤ، وتدعم الممارسة اللغوية وترديد العبارات مع السارد."}, {"q": "ما المقصود بالدعم البصري في القصة؟", "opts": ["إلغاء النص تماماً", "ربط الجمل والمفردات بصور أو بطاقات تواصل أو إيماءات", "استخدام خلفيات مزدحمة", "إضافة مؤثرات كثيرة في كل مشهد"], "ans": 1, "fb": "يُقترح إسناد اللغة بدعم بصري واضح مثل الصور المكبرة، وبطاقات التواصل البصري PECS، والإيماءات والحركات."}, {"q": "كيف ينبغي أن تعالج القصة ارتفاع القلق والتوتر النفسي؟", "opts": ["بمشاهد مخيفة", "بجو آمن ومطمئن ونهايات سارة ومستقرة", "بشخصيات عدوانية", "بنهايات مفتوحة ومقلقة"], "ans": 1, "fb": "القصة ينبغي أن توفر الأمان والراحة النفسية، مع تقليل المشاهد المخيفة والشخصيات العدوانية والاعتماد على نهايات مستقرة."}, {"q": "كيف يمكن للقصة دعم مفهوم الذات وتقليل الشعور بالعجز المتعلم؟", "opts": ["تقديم بطل يفشل دائماً", "تقديم بطل بقدرات بسيطة ينجح بالتدريب أو المساعدة", "إخفاء المشكلة", "استخدام شخصية مثالية لا تشبه الطفل"], "ans": 1, "fb": "البطل الذي يواجه المشكلة وينجح بالتدريب أو المساعدة يتيح للطفل التوحد معه واكتساب تقدير إيجابي للذات."}, {"q": "وفق المادة، ما الحد الأقصى المقترح لعدد الشخصيات الأساسية لتقليل الإجهاد الانفعالي؟", "opts": ["5 شخصيات", "10 شخصيات", "شخصية رئيسية وشخصية ثانوية واحدة كحد أقصى", "لا يوجد حد"], "ans": 2, "fb": "تقترح المادة ألا يزيد العدد عن شخصية رئيسية وشخصية ثانوية واحدة كحد أقصى لتجنب التشتيت الانفعالي."}, {"q": "أي مما يلي يمثل هدفاً اجتماعياً مناسباً للقصة؟", "opts": ["تعليم الاستئذان والمشاركة والترحيب", "زيادة التجريد", "إطالة مدة القصة", "تقليل التفاعل مع الآخرين"], "ans": 0, "fb": "القصة تقدم نماذج للسلوك الاجتماعي القويم مثل الترحيب والمشاركة والاستئذان في مواقف قصيرة."}, {"q": "لماذا تُستخدم النمذجة السلوكية والتعزيز المباشر؟", "opts": ["لأن الطفل يتعلم بصورة أفضل من خلال الملاحظة والتقليد", "لزيادة تعقيد القصة", "لإلغاء السلوك المرغوب", "لمنع المشاركة"], "ans": 0, "fb": "المادة توضح أن الطفل يتعلم بشكل أفضل من خلال الملاحظة والتقليد؛ لذلك تُبرز القصة السلوك المرغوب ومكافأته."}, {"q": "ما التصميم المناسب لمن لديه صعوبة في التحكم الدقيق وتقليب الصفحات؟", "opts": ["أوراق رقيقة جداً", "قصص مقواة أو قماشية ذات أوراق سميكة وبروزات مساعدة", "كتب ذات صفحات صغيرة جداً", "إلغاء التفاعل اليدوي"], "ans": 1, "fb": "القصص المقواة أو القماشية، مع الأوراق السميكة والبروزات والفواصل، تساعد الطفل على التحكم في الكتاب باستقلالية."}, {"q": "ما المقصود بالمدخل متعدد الحواس في القصص؟", "opts": ["استخدام حاسة واحدة", "إشراك أكثر من حاسة مثل اللمس والبصر والسمع", "الاعتماد على النص المكتوب فقط", "إلغاء الخامات الملموسة"], "ans": 1, "fb": "المدخل متعدد الحواس يدمج أكثر من حاسة، مثل النص المسموع والصورة والخامات الملموسة والمؤثرات الصوتية."}, {"q": "أي نوع من القصص يرتبط باللمس والخامات والمجسمات والمؤثرات الحسية؟", "opts": ["القصص الاجتماعية", "القصص الحسية والملموسة", "القصص الرقمية فقط", "القصص النمطية فقط"], "ans": 1, "fb": "القصص الحسية والملموسة تعتمد على خامات متنوعة الملمس ومجسمات وعناصر حسية مباشرة."}, {"q": "من ابتكرت استراتيجية القصص الاجتماعية وفق المادة؟", "opts": ["كارول غراي (Carol Gray)", "ماريا مونتيسوري", "جان بياجيه", "ب.ف. سكينر"], "ans": 0, "fb": "تذكر المادة أن استراتيجية القصص الاجتماعية ابتكرتها الباحثة كارول غراي (Carol Gray)."}, {"q": "أي موقف يمثل مثالاً مناسباً للقصة الاجتماعية؟", "opts": ["قصة طويلة متعددة الحبكات", "انتظام الدور في الطابور أو غسل اليدين", "قصة رمزية عن الزمن", "حكاية ذات عشر شخصيات"], "ans": 1, "fb": "القصة الاجتماعية تدور حول موقف اجتماعي محدد وواحد، مثل انتظار الدور أو غسل اليدين أو السلام على الأقارب."}, {"q": "أي مجموعة تمثل أنواع الجمل المذكورة في بناء القصة الاجتماعية؟", "opts": ["وصفية، توجيهية، تأكيدية، انفعالية", "سؤال، جواب، شعر، لغز", "مقدمة، عرض، خاتمة، ملحق", "سردية، شعرية، رمزية، خيالية"], "ans": 0, "fb": "يتضمن الهيكل: الجمل الوصفية، والتوجيهية، والتأكيدية، والانفعالية."}, {"q": "على ماذا تعتمد القصص الرقمية والتفاعلية وفق المادة؟", "opts": ["تكنولوجيا التعليم المساعد ونظرية الحمل المعرفي", "نظرية التحليل النفسي فقط", "الحفظ الآلي فقط", "التعلم دون وسائط"], "ans": 0, "fb": "تعتمد القصص الرقمية والتفاعلية على تكنولوجيا التعليم المساعد ونظرية الحمل المعرفي، مع التحكم في كمية المثيرات وسرعة السرد."}, {"q": "ما الهدف من التعزيز الفوري في القصص الرقمية التفاعلية؟", "opts": ["زيادة دافعية التعلم", "منع الاستقلالية", "إطالة زمن الانتظار", "زيادة الغموض"], "ans": 0, "fb": "التعزيز الفوري بمؤشرات بصرية وصوتية مشجعة يدعم دافعية التعلم والاستجابة التفاعلية والاستقلالية."}, {"q": "لمن تعد القصص المصورة المبسطة خياراً مثالياً وفق المادة؟", "opts": ["فقط للأطفال ذوي القراءة المتقدمة", "للأطفال ذوي الإعاقة العقلية البسيطة والمتوسطة في مرحلة ما قبل القراءة أو مع تأخر لغوي حاد", "للكبار فقط", "لمن لا يحتاج إلى دعم بصري"], "ans": 1, "fb": "تذكر المادة أنها مناسبة للأطفال ذوي الإعاقة العقلية البسيطة والمتوسطة، خاصة في مرحلة ما قبل القراءة أو مع التأخر اللغوي الحاد."}, {"q": "ما النظام الذي تذكره المادة مثالاً على الرموز البصرية في القصص المصورة؟", "opts": ["PECS", "GPS", "HTML", "SPSS"], "ans": 0, "fb": "تذكر المادة رموز نظام PECS وMayer-Johnson ضمن أمثلة الرموز البصرية المستخدمة."}, {"q": "ما الأساس النظري لقصص النمذجة التمثيلية والسيكودراما؟", "opts": ["التعلم باللعب والمدخل العلاجي للسيكودراما", "الحمل المعرفي فقط", "التعلم الصامت", "التعلم بالمحاضرة"], "ans": 0, "fb": "تقوم على نظرية التعلم باللعب والمدخل العلاجي للسيكودراما، مع المشاركة النشطة والتمثيل."}, {"q": "ما السمة الأساسية للقصص النمطية التكرارية؟", "opts": ["تغيير العبارة الأساسية كل مرة", "تكرار جملة أو عبارة رئيسية مع الأحداث الجديدة", "استخدام جمل طويلة جداً", "تقليل مشاركة الطفل"], "ans": 1, "fb": "تعتمد على جملة أو عبارة رئيسية ثابتة تتكرر مع دخول الشخصيات أو الانتقال إلى الأحداث، مما يسهل التنبؤ والترديد."}, {"q": "أي هدف يرتبط مباشرة بالقصص النمطية التكرارية؟", "opts": ["تثبيت المفردات وتحفيز المشاركة اللفظية وبناء الشعور بالكفاءة", "زيادة عدد الشخصيات", "رفع مستوى التجريد", "إلغاء التكرار"], "ans": 0, "fb": "من أهدافها تثبيت المفردات الجديدة، وتحفيز المشاركة اللفظية، وبناء الشعور بالإنجاز والكفاءة الذاتية."}];
+const $=id=>document.getElementById(id);
+let index=0, answers=Array(questions.length).fill(null), locked=false;
+let studentName="", academicId="";
+
+$("studentForm").addEventListener("submit",(e)=>{
+  e.preventDefault();
+  const name=$("studentName").value.trim();
+  const id=$("academicId").value.trim();
+  if(!name || !id) return;
+  studentName=name; academicId=id;
+  $("startPanel").style.display="none";
+  $("quizPanel").style.display="block";
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+$("count").textContent=questions.length;
+
+function render(){
+ locked=answers[index]!==null;
+ const q=questions[index];
+ $("qnum").textContent=`السؤال ${index+1} من ${questions.length}`;
+ $("answered").textContent=`تمت الإجابة: ${answers.filter(v=>v!==null).length}`;
+ $("bar").style.width=`${((index+1)/questions.length)*100}%`;
+ $("question").textContent=q.q;
+ $("options").innerHTML=q.opts.map((o,i)=>`<label class="option ${locked && i===q.ans?'correct':''} ${locked && answers[index]===i && i!==q.ans?'wrong':''}">
+<input type="radio" name="answer" value="${i}" ${answers[index]===i?'checked':''} ${locked?'disabled':''}><span>${String.fromCharCode(65+i)}. ${o}</span></label>`).join("");
+ $("feedback").classList.toggle("show",locked);
+ if(locked){
+   const ok=answers[index]===q.ans;
+   $("feedback").innerHTML=`<strong>${ok?"✓ إجابة صحيحة":"✗ إجابة غير صحيحة"}</strong>${q.fb}`;
+ } else $("feedback").innerHTML="";
+ $("prev").disabled=index===0;
+ $("next").textContent=index===questions.length-1?"إنهاء الاختبار":"التالي";
+ document.querySelectorAll('input[name="answer"]').forEach(r=>r.addEventListener('change',()=>select(+r.value)));
+}
+function select(v){
+ if(locked)return;
+ answers[index]=v; locked=true; render();
+}
+$("next").addEventListener("click",()=>{if(!locked)return; if(index<questions.length-1){index++;render()}else finish();});
+$("prev").addEventListener("click",()=>{if(index>0){index--;render()}});
+function reset(){
+ index=0; answers=Array(questions.length).fill(null); locked=false;
+ $("result").classList.remove("show");
+ $("quizPanel").style.display="none";
+ $("startPanel").style.display="block";
+ $("studentName").value=studentName;
+ $("academicId").value=academicId;
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+$("restart").addEventListener("click",reset);$("again").addEventListener("click",reset);
+
+function finish(){
+ const score=answers.reduce((s,a,i)=>s+(a===questions[i].ans?1:0),0);
+ $("quizPanel").style.display="none";$("result").classList.add("show");
+ const pct=Math.round(score/questions.length*100);
+ $("score").textContent=`${score} / ${questions.length}`;
+ $("studentResult").textContent=`الطالبة: ${studentName}  •  الرقم الأكاديمي: ${academicId}`;
+ $("resultTitle").textContent=pct>=90?"إتقان ممتاز":pct>=75?"مستوى جيد جداً":pct>=60?"مستوى جيد":"تحتاج إلى مراجعة المحتوى";
+ $("resultText").textContent=`نسبتك: ${pct}٪. يمكنك مراجعة الأسئلة بالأسفل لمعرفة الإجابات الصحيحة والتغذية الراجعة.`;
+ $("review").innerHTML=questions.map((q,i)=>{
+   const ok=answers[i]===q.ans;
+   return `<div class="review-item ${ok?'ok':'no'}"><b>${i+1}. ${q.q}</b><div class="small">إجابتك: ${answers[i]===null?"لم تتم الإجابة":q.opts[answers[i]]}</div><div><b>الإجابة الصحيحة:</b> ${q.opts[q.ans]}</div><div class="small">${q.fb}</div></div>`;
+ }).join("");
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+render();
+</script>
+</body>
+</html>
